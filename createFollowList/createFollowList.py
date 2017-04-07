@@ -119,16 +119,16 @@ class CreateFollowList():
 
                 fetched_screen_names += [x["screen_name"] for x in result["users"] if not x["protected"]]
 
-                try:
-                    with open("to_follow.json", "r") as fh:
-                        saved_screen_names = list(set(json.load(fh)))
-                except FileNotFoundError:
-                    saved_screen_names = []
-                
-                saved_screen_names += fetched_screen_names
-                with self.lock:
-                    with open("to_follow.json", "w") as fh:
-                        json.dump(saved_screen_names, fh, indent=4, ensure_ascii=False)
+            try:
+                with open("to_follow.json", "r") as fh:
+                    saved_screen_names = list(set(json.load(fh)))
+            except FileNotFoundError:
+                saved_screen_names = []
+            
+            saved_screen_names += fetched_screen_names
+            with self.lock:
+                with open("to_follow.json", "w") as fh:
+                    json.dump(saved_screen_names, fh, indent=4, ensure_ascii=False)
             print ("cursor: {}".format(cursor))
             self.screen_name_queue.task_done()
 
