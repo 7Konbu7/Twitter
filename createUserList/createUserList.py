@@ -191,10 +191,11 @@ class TweetsGetterBySearch(TweetsGetter):
 if __name__ == '__main__':
  
     info = {}
+    keywords = ["風俗","おっぱい","エロ","人妻","セフレ","童貞","デリヘル"]
     # キーワードで取得
-    getter = TweetsGetter.bySearch("XXX")
+    getter = TweetsGetter.bySearch("新大久保")
     cnt = 0
-    for tweets in getter.collect(total = 100):
+    for tweets in getter.collect(total = 1000):
         cnt += 1
         if "Screen" not in info:
             info["Screen"] = []
@@ -202,19 +203,9 @@ if __name__ == '__main__':
         follower = tweets['user']['followers_count']
         if 500 <= follower <= 1000:
             # 下ネタ系アカウントを適当に回避
-            if "風俗" in tweets['text']:
+            if (any([ a in tweets["text"] for a in keywords])):
                 continue
-            if "おっぱい" in tweets['text']:
-                continue
-            if "エロ" in tweets['text']:
-                continue
-            if "セフレ" in tweets['text']:
-                continue
-            if "童貞" in tweets['text']:
-                continue
-            if "デリヘル" in tweets['text']:
-                continue
-            if "風俗" in tweets['user']['name']:
+            if (any([ a in tweets['user']['name'] for a in keywords])):
                 continue
             info["Screen"].append(tweets['user']['screen_name'])
             contents = info["Screen"]
@@ -227,5 +218,5 @@ if __name__ == '__main__':
             print ('------ %d' % cnt)
             print ('{} {} {}'.format(tweets['id'], tweets['created_at'], '@'+tweets['user']['screen_name']))
             print (tweets['text'])
-    with open("userList.json", "w") as fh:
+    with open("tempuserList.json", "w") as fh:
         json.dump(info,fh,indent=4,ensure_ascii=False)
